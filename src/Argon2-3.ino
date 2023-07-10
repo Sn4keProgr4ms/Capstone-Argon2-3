@@ -41,7 +41,7 @@ void loop() {
 
       if (client.isConnected()) {
         client.loop();
-        client.publish("BAR/argon2/RSSI", rssi);
+        client.publish("BAR/argon3/RSSI", rssi);
       } else {
         client.connect(System.deviceID());
       }
