@@ -3,7 +3,7 @@
 
 SYSTEM_THREAD(ENABLED);
 
-void callback(char *topic, byte *payload, unsigned int length);
+void callback(char *topic, byte *payload, unsigned int length) {};
 MQTT client("lab.thewcl.com", 1883, callback);
 
 
@@ -14,6 +14,7 @@ BleUuid serviceUuid("afe7acc5-33a9-478f-bbe1-8944aa08e884");
 unsigned long lastScan;
 BleAddress peripheralAddr;
 int rssi;
+String string_rssi;
 
 void scanResultCallback(const BleScanResult *scanResult, void *context);
 
@@ -38,13 +39,13 @@ void loop() {
 			char buf[32];
 			snprintf(buf, sizeof(buf), "%d", rssi);
 			Serial.println(buf);
-
-      if (client.isConnected()) {
-        client.loop();
-        client.publish("BAR/argon2/RSSI", rssi);
-      } else {
-        client.connect(System.deviceID());
-      }
+			if (client.isConnected()) {
+				client.loop();
+				string_rssi = String(rssi);
+				client.publish("BAR/argon2/RSSI", string_rssi);
+			} else {
+				client.connect(System.deviceID());
+			}
 		}
 	}
 }
@@ -73,3 +74,4 @@ void scanResultCallback(const BleScanResult *scanResult, void *context) {
 	
 	BLE.stopScanning();
 }
+
